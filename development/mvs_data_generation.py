@@ -1,15 +1,12 @@
-# student_placements (creare ulteriori dati anagrafici come nome e data di nascita e unirli in una sola colonna)
 from sdv.datasets.demo import download_demo
 from sdv.single_table import GaussianCopulaSynthesizer
 from faker import Faker
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 import os
 
 real_data, metadata = download_demo(modality='single_table', dataset_name='student_placements')
 
-# Creazione di un dataset sintetico
 synthesizer = GaussianCopulaSynthesizer(metadata)
 synthesizer.fit(real_data)
 synthetic_data = synthesizer.sample(num_rows=20000)
@@ -56,7 +53,6 @@ synthetic_data['smell'] = synthetic_data['personal_info'].apply(detect_smell)
 
 # Spostamento della colonna personal_info in seconda posizione
 synthetic_data.insert(1, 'personal_info', synthetic_data.pop('personal_info'))
-
 synthetic_data.drop(columns=['gender'], inplace=True)
 
 synthetic_data.to_csv(os.path.join("..", "datasets", "mvs_dataset.csv"), index=False)

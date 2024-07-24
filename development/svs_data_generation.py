@@ -8,7 +8,6 @@ import os
 
 real_data, metadata = download_demo(modality='single_table', dataset_name='fake_hotel_guests')
 
-# Creazione di un dataset sintetico
 synthesizer = GaussianCopulaSynthesizer(metadata)
 synthesizer.fit(real_data)
 synthetic_data = synthesizer.sample(num_rows=20000)
