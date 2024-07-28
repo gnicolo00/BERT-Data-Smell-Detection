@@ -40,7 +40,26 @@ synthetic_data.loc[second_half, 'billing_address'] = np.nan
 # Aggiunta della colonna 'smell' per indicare la presenza o l'assenza di uno Splitted Value Smell
 synthetic_data['smell'] = synthetic_data['billing_address'].isna()
 
-synthetic_data.to_csv(os.path.join("..", "datasets", "svs_dataset.csv"), index=False)
+
+pd.set_option('display.max_columns', 7)
+pd.set_option('display.max_colwidth', None)
+pd.set_option('display.expand_frame_repr', False)
+
+print("Dataset head:")
+print(synthetic_data.head(n=20))
+
+print("Address column head:")
+columns = ['billing_address', 'street', 'city', 'state', 'zip_code', 'country', 'smell']
+print(synthetic_data[columns].head(20))
+
+print("Missing values:")
+null_mask = synthetic_data.isna()
+null_count = null_mask.sum()
+print(null_count)
+
+# Eliminazione delle righe in cui tutti i valori riguardanti gli indirizzi sono mancanti
+columns_to_check = ['billing_address', 'street', 'city', 'state', 'zip_code', 'country']
+synthetic_data.dropna(subset=columns_to_check, how='all', inplace=True)
 
 # Creazione e salvataggio di un pie plot per illustrare il bilanciamento della classe
 fig, ax = plt.subplots(figsize=(7, 6))
@@ -48,3 +67,6 @@ fig.subplots_adjust(left=0, right=1, top=1, bottom=0.1)
 plt.pie(synthetic_data['smell'].value_counts(), labels=['No Smell', 'Smell'], colors=["#E3E3E3", "#28A745"],
         explode=(0, 0.015), autopct="%0.2f", startangle=90, textprops={'fontsize': 11})
 plt.savefig(os.path.join("..", "plots", "svs-balancing.png"), format="png")
+
+
+synthetic_data.to_csv(os.path.join("..", "datasets", "svs_dataset.csv"), index=False)
