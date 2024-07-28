@@ -2,6 +2,7 @@ from sdv.datasets.demo import download_demo
 from sdv.single_table import GaussianCopulaSynthesizer
 from faker import Faker
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 import os
 
@@ -55,7 +56,22 @@ synthetic_data['smell'] = synthetic_data['personal_info'].apply(detect_smell)
 synthetic_data.insert(1, 'personal_info', synthetic_data.pop('personal_info'))
 synthetic_data.drop(columns=['gender'], inplace=True)
 
-synthetic_data.to_csv(os.path.join("..", "datasets", "mvs_dataset.csv"), index=False)
+
+pd.set_option('display.max_columns', 7)
+pd.set_option('display.max_colwidth', None)
+pd.set_option('display.expand_frame_repr', False)
+
+print("Dataset head:")
+print(synthetic_data.head(n=20))
+
+print("Personal info column head:")
+columns = ['personal_info', 'smell']
+print(synthetic_data[columns].head(20))
+
+print("Missing values: ", end='')
+null_mask = synthetic_data['personal_info'].isna()
+null_count = null_mask.sum()
+print(null_count)
 
 # Creazione e salvataggio di un pie plot per illustrare il bilanciamento della classe
 fig, ax = plt.subplots(figsize=(7, 6))
@@ -63,3 +79,6 @@ fig.subplots_adjust(left=0, right=1, top=1, bottom=0.1)
 plt.pie(synthetic_data['smell'].value_counts(), labels=['No Smell', 'Smell'], colors=["#E3E3E3", "#28A745"],
         explode=(0, 0.015), autopct="%0.2f", startangle=90, textprops={'fontsize': 11})
 plt.savefig(os.path.join("..", "plots", "mvs-balancing.png"), format="png")
+
+
+synthetic_data.to_csv(os.path.join("..", "datasets", "mvs_dataset.csv"), index=False)
