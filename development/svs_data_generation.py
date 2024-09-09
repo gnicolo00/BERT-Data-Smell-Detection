@@ -115,185 +115,224 @@ def split_url(url):
 
 def generate_birth_dates(num_rows):
     data = []
+
     for _ in range(num_rows):
         birth_date = faker.date_of_birth()
+
         data.append({
             'birth_day': birth_date.day,
             'birth_month': birth_date.month,
             'birth_year': birth_date.year,
             'birth_date': birth_date
         })
+
     return pd.DataFrame(data)
 
 
 def generate_dates(num_rows):
     data = []
+
     for _ in range(num_rows):
         date = faker.date()
+
         data.append({
             'day': pd.to_datetime(date).day,
             'month': pd.to_datetime(date).month,
             'year': pd.to_datetime(date).year,
             'date': date
         })
+
     return pd.DataFrame(data)
 
 
 def generate_time(num_rows):
     data = []
+
     for _ in range(num_rows):
         time = faker.time()
         h, m, s = time.split(':')
+
         data.append({
             'hours': int(h),
             'minutes': int(m),
             'seconds': int(s),
             'time': time
         })
+
     return pd.DataFrame(data)
 
 
 def generate_names(num_rows):
     data = []
+
     for _ in range(num_rows):
         first_name = faker.first_name()
         second_name = faker.first_name()
         last_name = faker.last_name()
         full_name = f"{first_name} {second_name} {last_name}"
+
         data.append({
             'first_name': first_name,
             'second_name': second_name,
             'last_name': last_name,
             'full_name': full_name
         })
+
     return pd.DataFrame(data)
 
 
 def generate_heights(num_rows):
     data = []
+
     for _ in range(num_rows):
         feet = faker.random_int(min=4, max=7)
         inches = faker.random_int(min=0, max=11)
         height = f"{feet} ft {inches} in"
+
         data.append({
             'height_feet': feet,
             'height_inches': inches,
             'height': height
         })
+
     return pd.DataFrame(data)
 
 
 def generate_heights_with_units(num_rows):
     data = []
+
     for _ in range(num_rows):
         height_value = faker.random_int(min=1, max=250)
         height_unit = faker.random_element(elements=["mm", "cm", "m"])
         height = f"{height_value}{height_unit}"
+
         data.append({
             'height_value': height_value,
             'height_unit': height_unit,
             'height': height
         })
+
     return pd.DataFrame(data)
 
 
 def generate_weights_with_units(num_rows):
     data = []
+
     for _ in range(num_rows):
         weight = faker.random_int(min=40, max=150)  # Peso in kg
         unit = faker.random_element(elements=["kg", "lb"])
         weight_str = f"{weight}{unit}"
+
         data.append({
             'weight': weight,
             'weight_unit': unit,
             'weight_combined': weight_str
         })
+
     return pd.DataFrame(data)
 
 
 def generate_prices(num_rows):
     data = []
+
     for _ in range(num_rows):
         price_value = faker.random_int(min=1, max=1000)
         currency = faker.currency_code()
         price_str = f"{price_value} {currency}"
+
         data.append({
             'price_value': price_value,
             'price_currency': currency,
             'price': price_str
         })
+
     return pd.DataFrame(data)
 
 
 def generate_coordinates(num_rows):
     data = []
+
     for _ in range(num_rows):
         latitude = faker.latitude()
         longitude = faker.longitude()
         coordinates = f"{latitude}, {longitude}"
+
         data.append({
             'latitude': latitude,
             'longitude': longitude,
             'coordinates': coordinates
         })
+
     return pd.DataFrame(data)
 
 
 def generate_file_names(num_rows):
     data = []
+
     for _ in range(num_rows):
         file_name = faker.file_name().split('.')[0]
         extension = faker.file_extension()
         full_file_name = f"{file_name}.{extension}"
+
         data.append({
             'file_name': file_name,
             'file_extension': extension,
             'file_name_with_extension': full_file_name
         })
+
     return pd.DataFrame(data)
 
 
 def generate_exam_datetime(num_rows):
     data = []
+
     for _ in range(num_rows):
         exam_date = faker.date()
         exam_time = faker.time()
         exam_datetime = f"{exam_date} {exam_time}"
+
         data.append({
             'exam_date': exam_date,
             'exam_time': exam_time,
             'exam_datetime': exam_datetime
         })
+
     return pd.DataFrame(data)
 
 
 def generate_rgb_colors(num_rows):
     data = []
+
     for _ in range(num_rows):
         primary_color = faker.random_int(min=1, max=255)
         secondary_color = faker.random_int(min=1, max=255)
         tertiary_color = faker.random_int(min=1, max=255)
         rgb_color = f"{primary_color}, {secondary_color}, {tertiary_color}"
+
         data.append({
             'primary_color': primary_color,
             'secondary_color': secondary_color,
             'tertiary_color': tertiary_color,
             'rgb_color': rgb_color
         })
+
     return pd.DataFrame(data)
 
 
 def generate_emails(num_rows):
     data = []
+
     for _ in range(num_rows):
         username = faker.user_name()
         domain = faker.domain_name()
         email = f"{username}@{domain}"
+
         data.append({
             'username': username,
             'domain': domain,
             'email': email
         })
+
     return pd.DataFrame(data)
 
 
