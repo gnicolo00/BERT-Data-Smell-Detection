@@ -15,23 +15,17 @@ def delete_col_and_rows(df, col_to_save):
     return df
 
 
-# Creazione e addestramento di un synthesizer per un dataset e generazione di dati sintetici
+# Creazione e addestramento di un synthesizer per dataset e generazione di dati sintetici
 def get_synthetic_data(df, col, function, new_columns):
-    df = df.astype(str) # Conversione di tutte le colonne in stringa, poiché BERT lavora solo con stringhe
-
-    # Creazione e modifica del metadata per forzare la colonna ad essere considerata una stringa dal synthesizer
     df_metadata = SingleTableMetadata()
     df_metadata.detect_from_dataframe(df)
     df_metadata.primary_key = None
-    df_metadata.update_column(
-        column_name=col,
-        sdtype='categorical'
-    )
-
-    # Creazione e addestramento del synthesizer e generazione dei dati sintetici
     df_synthesizer = GaussianCopulaSynthesizer(df_metadata)
     df_synthesizer.fit(df)
     df_synthetic_data = df_synthesizer.sample(num_rows=5000)
+
+    # Conversione di tutte le colonne in stringa, poiché BERT lavora solo con stringhe
+    df_synthetic_data = df_synthetic_data.astype(str)
 
     # Applicazione della funzione di split
     splitted_components = df_synthetic_data[col].apply(function)
@@ -338,8 +332,7 @@ def generate_emails(num_rows):
 
 addresses_ds = pd.read_csv(os.path.join("..", "datasets", "sub-datasets", "svs", "addresses.csv"))
 isbn_ds = pd.read_csv(os.path.join("..", "datasets", "sub-datasets", "svs", "isbn.csv"))
-license_plates_ds = pd.read_csv(os.path.join("..", "datasets", "sub-datasets", "svs", "license_plates.csv"),
-                                encoding='latin-1')
+license_plates_ds = pd.read_csv(os.path.join("..", "datasets", "sub-datasets", "svs", "license_plates.csv"))
 locations_ds = pd.read_csv(os.path.join("..", "datasets", "sub-datasets", "svs", "locations.csv"))
 phone_numbers_ds = pd.read_csv(os.path.join("..", "datasets", "sub-datasets", "svs", "phone_numbers.csv"))
 urls_ds = pd.read_csv(os.path.join("..", "datasets", "sub-datasets", "svs", "urls.csv"))
