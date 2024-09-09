@@ -6,10 +6,6 @@ from sdv.metadata import SingleTableMetadata
 from sdv.single_table import GaussianCopulaSynthesizer
 from faker import Faker
 
-pd.set_option('display.max_columns', 6)
-pd.set_option('display.max_colwidth', None)
-pd.set_option('display.expand_frame_repr', False)
-
 
 # Rimozione delle colonne non necessarie e delle righe con valori nulli o duplicati
 def delete_col_and_rows(df, col_to_save):
