@@ -54,12 +54,3 @@ fig.subplots_adjust(left=0, right=1, top=1, bottom=0.1)
 plt.pie(smell_counts, labels=['Non-Smelly', 'Smelly'], colors=["#CCCCCC", "#28A745"],
         explode=(0, 0.015), autopct="%0.2f", startangle=90, textprops={'fontsize': 11})
 plt.savefig(os.path.join("..", "plots", "mvs-balancing-pie.png"), format="png")
-# Creazione e salvataggio di un bar plot
-plt.figure(figsize=(8, 6))
-plt.bar(smell_counts.index, smell_counts.values, color=['#CCCCCC', '#28A745'], edgecolor='black', linewidth=1)
-plt.title('Distribuzione dei dati Smelly vs Non-Smelly', fontsize=16)
-plt.xlabel('Multiple Value Smell', fontsize=14)
-plt.ylabel('Numero di Istanze', fontsize=14)
-plt.xticks([0, 1], ['Non-Smelly', 'Smelly'])
-plt.grid(axis='y', linestyle='--', alpha=0.7)
-plt.savefig(os.path.join("..", "plots", "mvs-balancing-bar.png"), format="png")
