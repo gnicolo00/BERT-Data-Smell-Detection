@@ -11,23 +11,23 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix
-import seaborn as sns
+from matplotlib.colors import ListedColormap
 
 tf.get_logger().setLevel('ERROR')
 
 
 def data_preprocessing(rows):
     # Ottenimento del meta-dataset contenente gli Splitted Value Smells
-    mvs_meta_dataset = pd.read_csv(os.path.join("..", "datasets", "meta-datasets", "mvs_metadataset.csv"))
-    mvs_meta_dataset.drop("ID Dataset", axis=1, inplace=True)
+    svs_meta_dataset = pd.read_csv(os.path.join("..", "datasets", "meta-datasets", "svs_metadataset.csv"))
+    svs_meta_dataset.drop("ID Dataset", axis=1, inplace=True)
     # Unione delle colonne 'Nome Feature' e 'Valore' in un'unica stringa "nome colonna: valore"
-    mvs_meta_dataset["Nome e Valore"] = mvs_meta_dataset["Nome Feature"] + ": " + mvs_meta_dataset["Valore"]
-    mvs_meta_dataset.drop("Nome Feature", axis=1, inplace=True)
-    mvs_meta_dataset.drop("Valore", axis=1, inplace=True)
+    svs_meta_dataset["Nome e Valore"] = svs_meta_dataset["Nome Feature"] + ": " + svs_meta_dataset["Valore"]
+    svs_meta_dataset.drop("Nome Feature", axis=1, inplace=True)
+    svs_meta_dataset.drop("Valore", axis=1, inplace=True)
 
     # Undersampling dei dati
-    smelly = mvs_meta_dataset[mvs_meta_dataset['Smell'] == 1]
-    non_smelly = mvs_meta_dataset[mvs_meta_dataset['Smell'] == 0]
+    smelly = svs_meta_dataset[svs_meta_dataset['Smell'] == 1]
+    non_smelly = svs_meta_dataset[svs_meta_dataset['Smell'] == 0]
     # Selezione casuale del numero di righe passato come parametro per ognuno dei due gruppi di dati (smelly e non)
     smelly_sample = smelly.sample(n=rows, random_state=42)  # random_state per riproducibilità
     non_smelly_sample = non_smelly.sample(n=rows, random_state=42)
@@ -84,7 +84,7 @@ def train_and_evaluate(epochs, X_train, X_test, y_train, y_test):
                                    validation_data=(X_test, y_test),
                                    epochs=epochs)
 
-    classifier_model.save("mvs_model", include_optimizer=False)
+    classifier_model.save("svs_model", include_optimizer=False)
 
     # Salvataggio delle performance del modello
     history_dict = history.history
@@ -97,11 +97,11 @@ def train_and_evaluate(epochs, X_train, X_test, y_train, y_test):
     rec = history_dict['recall']
     val_rec = history_dict['val_recall']
 
-    print("[Training] Multiple Value Smell Model Metrics:\n"
+    print("[Training] Splitted Value Smell Model Metrics:\n"
           f"Accuracy: {acc}\n"
           f"Precision: {prec}\n"
           f"Recall: {rec}\n")
-    print("[Testing] Multiple Value Smell Model Metrics:\n"
+    print("[Testing] Splitted Value Smell Model Metrics:\n"
           f"Accuracy: {val_acc}\n"
           f"Precision: {val_prec}\n"
           f"Recall: {val_rec}\n")
@@ -109,7 +109,7 @@ def train_and_evaluate(epochs, X_train, X_test, y_train, y_test):
     save_evaluation_graphs(acc, val_acc, loss, val_loss, X_test, y_test)
 
 
-def save_evaluation_graphs(acc, val_acc, loss, val_loss):
+def save_evaluation_graphs(acc, val_acc, loss, val_loss, X_test, y_test):
     epochs = range(1, len(acc) + 1)
     fig = plt.figure(figsize=(10, 6))
     fig.tight_layout()
@@ -118,20 +118,20 @@ def save_evaluation_graphs(acc, val_acc, loss, val_loss):
     plt.subplot(2, 1, 1)
     plt.plot(epochs, loss, 'r', label='Training Loss')
     plt.plot(epochs, val_loss, 'b', label='Validation loss')
-    plt.title('MVS Training and validation loss')
+    plt.title('Training and Validation Loss - Splitted Value Smells Model')
     plt.ylabel('Loss')
     plt.legend()
 
     # Accuracy
     plt.subplot(2, 1, 2)
     plt.plot(epochs, acc, 'r', label='Training Accuracy')
-    plt.plot(epochs, val_acc, 'b', label='Validation Validation acc')
-    plt.title('Training and Validation Accuracy - Multiple Value Smells Model')
+    plt.plot(epochs, val_acc, 'b', label='Validation Accuracy')
+    plt.title('Training and Validation Accuracy - Splitted Value Smells Model')
     plt.xlabel('Epochs')
     plt.ylabel('Accuracy')
     plt.legend(loc='lower right')
 
-    plt.savefig(os.path.join("..", "plots", "mvs-acc-and-loss.png"))
+    plt.savefig(os.path.join("..", "plots", "svs-acc-and-loss.png"))
     plt.show()
 
 
@@ -142,11 +142,19 @@ def save_evaluation_graphs(acc, val_acc, loss, val_loss):
     y_pred = (y_pred_prob > 0.5).astype("int32")
     cm = confusion_matrix(y_test, y_pred)
     plt.figure(figsize=(8, 6))
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Greens')
-    plt.title('Confusion Matrix - Multiple Value Smells Model')
-    plt.xlabel('Predicted Label')
-    plt.ylabel('True Label')
-    plt.savefig(os.path.join("..", "plots", "mvs-confusion-matrix.png"))
+    color_map = ListedColormap('white', name='colormap_list')
+    color_matrix = [['#FFFFFF', '#28A745'], ['#28A745', '#FFFFFF']]
+    color_text_matrix = [['black', 'white'], ['white', 'black']]
+    plt.imshow(cm, cmap=color_map, origin='upper')
+    for i in range(cm.shape[0]):
+        for j in range(cm.shape[1]):
+            plt.text(j, i, str(cm[i, j]), color=color_text_matrix[i][j])
+            plt.fill_between([j - 0.5, j + 0.5], i - 0.5, i + 0.5, color=color_matrix[i][j], alpha=1)
+    plt.xticks([0, 1])
+    plt.yticks([0, 1])
+    plt.xlabel('Predicted label')
+    plt.ylabel('True label')
+    plt.savefig(os.path.join("..", "plots", "svs-confusion-matrix.png"))
     plt.show()
 
 
