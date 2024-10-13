@@ -1,0 +1,13 @@
+Faker==30.1.0
+matplotlib==3.9.2
+numpy==2.1.2
+pandas==2.2.3
+scikit_learn==1.5.2
+sdv==1.17.1
+seaborn==0.13.2
+streamlit==1.39.0
+tensorflow==2.10.1
+tensorflow_hub==0.16.1
+tensorflow_intel==2.17.0
+tensorflow_text==2.10.0
+tf_models_official==2.10.1
