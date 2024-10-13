@@ -19,6 +19,7 @@ Questa repository è organizzata in tre directory principali:
 
 L'applicazione può essere avviata tramite il file `interface.py`, che utilizza Streamlit per creare l'interfaccia utente. Per avviare l'applicazione, seguire i seguenti passaggi:
 1. **Installazione delle Dipendenze**: Installare tutte le dipendenze necessarie riportate nel file `requirements.txt`, il che è possibile farlo tramite il comando `pip install -r requirements.txt`.
+2. **Addestramento dei Modelli**: Prima dell'avvio, addestrare i due modelli (oppure il singolo modello che si intende utilizzare) eseguendo i corrispettivi script.
 2. **Avvio dell'Applicazione**: Una volta installate le dipendenze, eseguire il comando `streamlit run development/interface.py` dalla directory principale del progetto.
 3. **Accesso all'interfaccia**: Dopo l'avvio, Streamlit aprirà automaticamente una nuova scheda del browser. Da qui è possibile interagire con l'applicazione per identificare i Multiple Value Smells e gli Splitted Value Smells nei dataset.
 
